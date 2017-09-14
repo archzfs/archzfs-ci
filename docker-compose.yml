@@ -2,6 +2,7 @@ version: '2'
 services:
     buildbot:
         image: archzfs-master
+        restart: always
         env_file:
             - docker/master/db.env
             - conf.env
@@ -12,16 +13,18 @@ services:
         ports:
             - "8080:8080"
     db:
+        image: "postgres:9.4"
+        restart: always
         env_file:
             - docker/master/db.env
-        image: "postgres:9.4"
         expose:
             - 5432
 
     worker:
         image: archzfs-worker
+        restart: always
         privileged: true
         volumes:              
-              - /sys/fs/cgroup:/sys/fs/cgroup:ro
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
         links:
             - buildbot
