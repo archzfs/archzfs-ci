@@ -22,12 +22,9 @@ USER buildbot
 WORKDIR /master
 RUN buildbot create-master .
 
-# use buildbot logs for output
-USER root
-RUN ln -s /master/twisted.log /dev/stdio
-
 # copy master.cfg
 ADD master.cfg /master/
+USER root
 RUN chown buildbot:buildbot master.cfg
 USER buildbot
 RUN buildbot checkconfig master.cfg

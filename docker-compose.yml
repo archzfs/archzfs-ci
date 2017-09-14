@@ -3,7 +3,8 @@ services:
     buildbot:
         image: archzfs-master
         env_file:
-            - master/db.env
+            - docker/master/db.env
+            - conf.env
         links:
             - db
         depends_on:
@@ -12,7 +13,7 @@ services:
             - "8080:8080"
     db:
         env_file:
-            - master/db.env
+            - docker/master/db.env
         image: "postgres:9.4"
         expose:
             - 5432
