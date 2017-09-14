@@ -1,11 +1,11 @@
 FROM base/devel
 MAINTAINER minextu
 
-RUN pacman -Sy --noconfirm python-pip python-twisted python-future && \
+RUN pacman -Sy --noconfirm python2-pip python2-twisted python2-future && \
     find /var/cache/pacman/pkg -mindepth 1 -delete
 
 # install buildbot worker
-RUN pip install buildbot-worker
+RUN pip2 install buildbot-worker
 
 # add buildbot user
 RUN groupadd -r buildbot && \
