@@ -1,6 +1,6 @@
 version: '2'
 services:
-    buildbot:
+    master:
         image: archzfs-master
         restart: always
         env_file:
@@ -27,4 +27,4 @@ services:
         volumes:              
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
         links:
-            - buildbot
+            - master
