@@ -1,8 +1,8 @@
-version: '2'
+version:             '2'
 services:
     master:
-        image: archzfs-master
-        restart: always
+        image:       archzfs-master
+        restart:     always
         env_file:
             - docker/master/db.env
             - conf.env
@@ -13,18 +13,65 @@ services:
         ports:
             - "8080:8080"
     db:
-        image: "postgres:9.4"
-        restart: always
+        image:       "postgres:9.4"
+        restart:     always
         env_file:
             - docker/master/db.env
         expose:
             - 5432
 
-    worker:
-        image: archzfs-worker
-        restart: always
-        privileged: true
-        volumes:              
+    worker1:
+        image:       archzfs-worker
+        environment:
+            - WORKER_NAME=archzfs-worker1
+        restart:     always
+        privileged:  true
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        links:
+            - master
+
+    worker2:
+        image:       archzfs-worker
+        environment:
+            - WORKER_NAME=archzfs-worker2
+        restart:     always
+        privileged:  true
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        links:
+            - master
+
+    worker3:
+        image:       archzfs-worker
+        environment:
+            - WORKER_NAME=archzfs-worker3
+        restart:     always
+        privileged:  true
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        links:
+            - master
+
+
+    worker4:
+        image:       archzfs-worker
+        environment:
+            - WORKER_NAME=archzfs-worker4
+        restart:     always
+        privileged:  true
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        links:
+            - master
+
+    worker5:
+        image:       archzfs-worker
+        environment:
+            - WORKER_NAME=archzfs-worker5
+        restart:     always
+        privileged:  true
+        volumes:
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
         links:
             - master

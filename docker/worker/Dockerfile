@@ -14,11 +14,6 @@ RUN groupadd -r buildbot && \
     chown buildbot:buildbot /worker && \
     echo "buildbot ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# create a new worker
-USER buildbot
-WORKDIR /worker
-RUN buildbot-worker create-worker . master archzfs-worker At3iiquae3AeTaex3eoc
-
 # remove all systemd services
 USER root
 RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done) && \
@@ -56,5 +51,6 @@ RUN sudo ccm64                      && \
     sudo mkdir -p /scratch/chroot64
 
 USER root
+ADD start.sh /
 VOLUME [ "/sys/fs/cgroup" ]
-CMD ["/usr/bin/init"]
+CMD ["sh", "/start.sh"]
