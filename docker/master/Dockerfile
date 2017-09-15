@@ -9,7 +9,8 @@ RUN apt-get update && \
 RUN pip install --upgrade pip
 
 # build master
-RUN pip install 'buildbot[bundle]'
+RUN pip install 'buildbot[bundle]' && \
+    pip install txrequests
 
 # add user and directory
 RUN groupadd -r buildbot && \
