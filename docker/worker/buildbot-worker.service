@@ -5,6 +5,7 @@ Description=BuildBot worker service
 User=buildbot
 Group=buildbot
 WorkingDirectory=/worker
+ExecStartPre=/usr/bin/rm -f /worker/twistd.pid
 ExecStart=/usr/bin/buildbot-worker start --nodaemon
 
 [Install]

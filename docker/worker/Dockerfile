@@ -7,16 +7,17 @@ RUN pacman -Sy --noconfirm python2-pip python2-twisted python2-future && \
 # install buildbot worker
 RUN pip2 install buildbot-worker
 
-# add buildbot user
+# add buildbot user and give passwordless sudo access (needed for archzfs build scripts)
 RUN groupadd -r buildbot && \
-    useradd -r -g buildbot buildbot && \
+    useradd -m -r -g buildbot buildbot && \
     mkdir /worker && \
-    chown buildbot:buildbot /worker
+    chown buildbot:buildbot /worker && \
+    echo "buildbot ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # create a new worker
 USER buildbot
 WORKDIR /worker
-RUN buildbot-worker create-worker . buildbot archzfs-worker At3iiquae3AeTaex3eoc
+RUN buildbot-worker create-worker . master archzfs-worker At3iiquae3AeTaex3eoc
 
 # remove all systemd services
 USER root
@@ -34,8 +35,26 @@ ADD buildbot-worker.service /etc/systemd/system/
 RUN systemctl enable buildbot-worker.service
 
 # install archzfs dependencies
-RUN pacman -Sy --noconfirm git && \
+RUN pacman -Sy --noconfirm git pkgbuild-introspection wget && \
     find /var/cache/pacman/pkg -mindepth 1 -delete
 
+# aur prep
+RUN useradd aur && \
+    echo "aur ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# clean-chroot-manager
+USER aur
+RUN cd /tmp && \
+    wget https://aur.archlinux.org/cgit/aur.git/snapshot/clean-chroot-manager.tar.gz && \
+    tar -xvf clean-chroot-manager.tar.gz && \
+    cd clean-chroot-manager              && \
+    makepkg -si --noconfirm
+
+# run ccm64 once to generate config file
+USER buildbot
+RUN sudo ccm64                      && \
+    sudo mkdir -p /scratch/chroot64
+
+USER root
 VOLUME [ "/sys/fs/cgroup" ]
 CMD ["/usr/bin/init"]
