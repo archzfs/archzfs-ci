@@ -1,6 +1,10 @@
 #!/bin/sh
 
 master=`pwd`
+
+# remove any previous pid
+rm -f $master/twistd.pid
+
 # upgrade database
 until buildbot upgrade-master $master
 do
