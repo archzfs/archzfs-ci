@@ -55,5 +55,6 @@ USER root
 RUN sed -i 's/--register=no/--register=no --machine \$(uuidgen)/' /usr/bin/arch-nspawn
 
 ADD start.sh /
+STOPSIGNAL SIGRTMIN+3
 VOLUME [ "/sys/fs/cgroup" ]
 CMD ["sh", "/start.sh"]

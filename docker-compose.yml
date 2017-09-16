@@ -29,10 +29,10 @@ services:
         environment:
             - WORKER_NAME=archzfs-worker
         restart:     always
-        privileged:  true
         volumes:
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
             - ./cache/pacman-worker:/var/cache/pacman/pkg:rw
+        tmpfs:       /run
         links:
             - master
 
