@@ -37,7 +37,7 @@ RUN useradd aur && \
     locale-gen
 
 # install archzfs dependencies
-RUN pacman -Sy --noconfirm pkgbuild-introspection && \
+RUN pacman -Sy --noconfirm pkgbuild-introspection sshfs && \
     find /var/cache/pacman/pkg -mindepth 1 -delete
 
 # clean-chroot-manager

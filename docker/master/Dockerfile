@@ -13,10 +13,15 @@ RUN pip install 'buildbot[bundle]' && \
     pip install txrequests
 
 # add user and directory
-RUN groupadd -r buildbot && \
+RUN groupadd -r buildbot            && \
     useradd -r -g buildbot buildbot && \
-    mkdir /master && \
-    chown buildbot:buildbot /master
+    mkdir -p /master/secrets        && \
+    chown -R buildbot:buildbot /master
+
+# copy secrets
+ADD secrets/* /master/secrets/
+RUN chown -R buildbot:buildbot /master/secrets && \
+    chmod -R go-rwx /master/secrets
 
 # create buildbot master
 USER buildbot
