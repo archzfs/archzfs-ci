@@ -13,7 +13,7 @@ git clone https://github.com/minextu/archzfs-ci
 ```
 - Build the docker images
 ```
-./build.sh
+docker-compose build
 ```
 - Start the web interface
 ```

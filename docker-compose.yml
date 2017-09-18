@@ -2,6 +2,7 @@ version:             '2'
 services:
     master:
         image:       archzfs-master
+        build:       ./docker/master
         restart:     always
         env_file:
             - docker/master/db.env
@@ -22,6 +23,7 @@ services:
 
     worker1:
         image:       archzfs-worker
+        build:       ./docker/worker
         environment:
             - WORKER_NAME=archzfs-worker1
         restart:     always
