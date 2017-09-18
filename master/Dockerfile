@@ -13,6 +13,8 @@ RUN apt-get update && \
 RUN pip3 install 'buildbot[bundle]' && \
     # github api support
     pip3 install txrequests         && \
+    # docker latent worker support
+    pip3 install docker-py          && \
     # needed for badges
     pip3 install buildbot_pkg       && \
     pip3 install buildbot-badges
@@ -35,5 +37,6 @@ RUN chown buildbot:buildbot master.cfg
 USER buildbot
 RUN buildbot checkconfig master.cfg
 
+USER root
 ADD start.sh /
 CMD ["sh", "/start.sh"]

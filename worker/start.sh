@@ -3,7 +3,7 @@
 # create a new worker
 su -s /bin/sh buildbot -c "
 cd /worker
-buildbot-worker create-worker . master $WORKER_NAME At3iiquae3AeTaex3eoc
+buildbot-worker create-worker . master '$WORKERNAME' '$WORKERPASS'
 rm info/admin info/host
 "
 

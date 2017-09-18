@@ -11,6 +11,9 @@ services:
             - db
         depends_on:
             - db
+        privileged:  true
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
         ports:
             - "8080:8080"
     db:
@@ -22,20 +25,6 @@ services:
             - ./cache/postgres-data:/var/lib/postgresql/data
         expose:
             - 5432
-
-    worker:
-        image:       archzfs-worker
-        build:       ./worker
-        environment:
-            - WORKER_NAME=archzfs-worker
-        restart:     always
-        privileged:  true
-        volumes:
-            - /sys/fs/cgroup:/sys/fs/cgroup:ro
-            - ./cache/pacman-worker:/var/cache/pacman/pkg:rw
-        links:
-            - master
-
     deploy:
         image:       archzfs-deploy
         build:       ./deploy
