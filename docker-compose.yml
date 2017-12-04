@@ -18,6 +18,8 @@ services:
         restart:     always
         env_file:
             - docker/master/db.env
+        volumes:
+            - ./postgres-data:/var/lib/postgresql/data
         expose:
             - 5432
 
