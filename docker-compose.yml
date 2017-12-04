@@ -2,10 +2,10 @@ version:             '2'
 services:
     master:
         image:       archzfs-master
-        build:       ./docker/master
+        build:       ./master
         restart:     always
         env_file:
-            - docker/master/db.env
+            - master/db.env
             - conf.env
         links:
             - db
@@ -17,7 +17,7 @@ services:
         image:       "postgres:9.4"
         restart:     always
         env_file:
-            - docker/master/db.env
+            - master/db.env
         volumes:
             - ./postgres-data:/var/lib/postgresql/data
         expose:
@@ -25,7 +25,7 @@ services:
 
     worker1:
         image:       archzfs-worker
-        build:       ./docker/worker
+        build:       ./worker
         environment:
             - WORKER_NAME=archzfs-worker1
         restart:     always
