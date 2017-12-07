@@ -15,13 +15,8 @@ RUN pip install 'buildbot[bundle]' && \
 # add user and directory
 RUN groupadd -r buildbot            && \
     useradd -r -g buildbot buildbot && \
-    mkdir -p /master/secrets        && \
+    mkdir -p /master                && \
     chown -R buildbot:buildbot /master
-
-# copy secrets
-ADD secrets/* /master/secrets/
-RUN chown -R buildbot:buildbot /master/secrets && \
-    chmod -R go-rwx /master/secrets
 
 # create buildbot master
 USER buildbot

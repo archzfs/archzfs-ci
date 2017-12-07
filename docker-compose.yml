@@ -79,3 +79,15 @@ services:
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
         links:
             - master
+
+    deploy:
+        image:       archzfs-deploy
+        build:       ./deploy
+        environment:
+            - WORKER_NAME=archzfs-deploy
+        restart:     always
+        privileged:  true
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        links:
+            - master
