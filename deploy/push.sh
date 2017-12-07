@@ -6,6 +6,7 @@
 
 REMOTE_SERVER=$1
 REMOTE_PATH=$2
+REMOTE_REPO_BASENAME=$3
 
 # only continue, if inside a container
 if [[ ! -f /.dockerenv ]]; then
@@ -19,7 +20,7 @@ function cleanup {
 trap cleanup EXIT
 
 # change repo name
-sed -i 's/repo_basename="archzfs"/repo_basename="archzfs-ci"/' conf.sh
+sed -i "s/repo_basename=\"archzfs\"/repo_basename=\"${REMOTE_REPO_BASENAME}\"/" conf.sh
 
 # add gpg key to config
 key=$(gpg --list-keys --with-colons | awk -F: '/^pub:/ { print $5 }')
@@ -30,5 +31,6 @@ sudo mkdir -p /data/pacman/repo
 sudo chown buildbot:buildbot /data/pacman/repo
 ssh "${REMOTE_SERVER}" echo 'can connect to repo server!'    && \
 sshfs "${REMOTE_SERVER}:${REMOTE_PATH}" /data/pacman/repo -C && \
-mkdir -p /data/pacman/repo/{archzfs-ci,archzfs-ci-archive}   && \
+mkdir -p /data/pacman/repo/${REMOTE_REPO_BASENAME}           && \
+mkdir -p /data/pacman/repo/${REMOTE_REPO_BASENAME}-archive   && \
 ./repo.sh all azfs
