@@ -32,5 +32,5 @@ sudo chown buildbot:buildbot /data/pacman/repo
 ssh "${REMOTE_SERVER}" echo 'can connect to repo server!'    && \
 sshfs "${REMOTE_SERVER}:${REMOTE_PATH}" /data/pacman/repo -C && \
 mkdir -p /data/pacman/repo/${REMOTE_REPO_BASENAME}           && \
-mkdir -p /data/pacman/repo/${REMOTE_REPO_BASENAME}-archive   && \
+mkdir -p /data/pacman/repo/archive_${REMOTE_REPO_BASENAME}   && \
 ./repo.sh all azfs
