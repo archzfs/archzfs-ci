@@ -21,6 +21,7 @@ trap cleanup EXIT
 
 # change repo name
 sed -i "s/repo_basename=\"archzfs\"/repo_basename=\"${REMOTE_REPO_BASENAME}\"/" conf.sh
+sed -i "s#package_backup_dir=\"/data/pacman/repo/archive_archzfs\"#package_backup_dir=\"/data/pacman/repo/archive_${REMOTE_REPO_BASENAME}\"#" conf.sh
 
 # add gpg key to config
 key=$(gpg --list-keys --with-colons | awk -F: '/^pub:/ { print $5 }')
