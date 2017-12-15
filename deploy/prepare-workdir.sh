@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Update config file for deployment
+# Setup workdir for deployment
 #
 
 REMOTE_SERVER=$1
