@@ -1,11 +1,11 @@
 FROM base/devel
 MAINTAINER minextu
 
-RUN pacman -Sy --noconfirm python2-pip python2-twisted python2-future git wget && \
+RUN pacman -Sy --noconfirm python-pip python-twisted python-future git wget && \
     find /var/cache/pacman/pkg -mindepth 1 -delete
 
 # install buildbot worker
-RUN pip2 install buildbot-worker
+RUN pip install buildbot-worker
 
 # remove all systemd services
 USER root
@@ -37,7 +37,7 @@ RUN useradd aur && \
     locale-gen
 
 # install archzfs dependencies
-RUN pacman -Sy --noconfirm pkgbuild-introspection sshfs && \
+RUN pacman -Sy --noconfirm pkgbuild-introspection && \
     find /var/cache/pacman/pkg -mindepth 1 -delete
 
 # clean-chroot-manager
