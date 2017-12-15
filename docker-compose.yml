@@ -19,7 +19,7 @@ services:
         env_file:
             - master/db.env
         volumes:
-            - ./postgres-data:/var/lib/postgresql/data
+            - ./cache/postgres-data:/var/lib/postgresql/data
         expose:
             - 5432
 
@@ -32,6 +32,7 @@ services:
         privileged:  true
         volumes:
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
+            - ./cache/pacman:/var/cache/pacman/pkg:rw
         links:
             - master
 
@@ -44,5 +45,6 @@ services:
         privileged:  true
         volumes:
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
+            - ./cache/pacman:/var/cache/pacman/pkg:rw
         links:
             - master
