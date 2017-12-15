@@ -32,7 +32,7 @@ services:
         privileged:  true
         volumes:
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
-            - ./cache/pacman:/var/cache/pacman/pkg:rw
+            - ./cache/pacman-worker:/var/cache/pacman/pkg:rw
         links:
             - master
 
@@ -45,6 +45,6 @@ services:
         privileged:  true
         volumes:
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
-            - ./cache/pacman:/var/cache/pacman/pkg:rw
+            - ./cache/pacman-deploy:/var/cache/pacman/pkg:rw
         links:
             - master
