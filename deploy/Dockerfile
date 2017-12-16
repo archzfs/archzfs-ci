@@ -1,6 +1,9 @@
 FROM archzfs-worker
 MAINTAINER minextu
 
+RUN pacman -Sy --noconfirm expect && \
+    find /var/cache/pacman/pkg -mindepth 1 -delete
+
 # copy secrets
 ADD secrets/* /worker/secrets/
 RUN chown -R buildbot:buildbot /worker/secrets && \

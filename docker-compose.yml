@@ -41,6 +41,8 @@ services:
         build:       ./deploy
         environment:
             - WORKER_NAME=archzfs-deploy
+        env_file:
+            - conf.env
         restart:     always
         privileged:  true
         volumes:
