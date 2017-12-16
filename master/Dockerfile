@@ -4,11 +4,16 @@ MAINTAINER minextu
 # install dependencies
 RUN apt-get update && \
     apt-get install -y python3 python3-dev python3-pip python3-psycopg2 \
-                       libffi-dev libcairo2
+                       # needed for buildbot badges
+                       libffi-dev libcairo2                             \
+                       # email tls support
+                       python3-openssl python3-service-identity
 
 # build master
 RUN pip3 install 'buildbot[bundle]' && \
+    # github api support
     pip3 install txrequests         && \
+    # needed for badges
     pip3 install buildbot_pkg       && \
     pip3 install buildbot-badges
 
