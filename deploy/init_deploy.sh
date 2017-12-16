@@ -33,6 +33,7 @@ chown -R buildbot:buildbot /home/buildbot/.ssh && \
 chmod -R go-rwx /home/buildbot/.ssh
 
 # gpg
+rm -rf /home/buildbot/.gnupg
 mkdir -p /home/buildbot/.gnupg
 cp /worker/secrets/gpg_key /home/buildbot/.gnupg/gpg_key
 chown -R buildbot:buildbot /home/buildbot/.gnupg
@@ -58,6 +59,8 @@ send "\r"
 expect eof
 EOD
 
+# trust key
+expect -c "spawn gpg --edit-key \$key trust quit; send \"5\ry\r\"; expect eof"
 EOF
 
 # start this worker
