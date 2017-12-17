@@ -43,7 +43,7 @@ chmod -R go-rwx /home/buildbot/.gnupg
 su buildbot <<EOF
 gpg-agent --daemon --pinentry-program /usr/local/bin/pinentry-auto
 gpg --batch --import ~/.gnupg/gpg_key
-key=\$(gpg --list-keys --with-colons | awk -F: '/^pub:/ { print \$5 }')
+key=\$(gpg --list-secret-keys --with-colons | awk -F: '/^sec:/ { print \$5 }')
 
 # remove gpg passphrase
 /usr/bin/expect <<EOD

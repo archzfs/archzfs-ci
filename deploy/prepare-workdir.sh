@@ -28,7 +28,7 @@ sed -i "s/remote_login=\"webfaction\"/remote_login=\"${REMOTE_SERVER}\"/" conf.s
 sed -i "s#repo_remote_basepath=\"/home/jalvarez/webapps/default\"#repo_remote_basepath=\"${REMOTE_PATH}\"#" conf.sh
 
 # add gpg key to config
-key=$(gpg --list-keys --with-colons | awk -F: '/^pub:/ { print $5 }')
+key=$(gpg --list-secret-keys --with-colons | awk -F: '/^sec:/ { print $5 }')
 sed -i "s/gpg_sign_key='0EE7A126'/gpg_sign_key='${key}'/" conf.sh
 
 # create repo dir
