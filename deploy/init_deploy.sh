@@ -32,6 +32,12 @@ cp /worker/secrets/ssh_server_hostkeys /home/buildbot/.ssh/known_hosts
 chown -R buildbot:buildbot /home/buildbot/.ssh && \
 chmod -R go-rwx /home/buildbot/.ssh
 
+# init git config
+su buildbot <<EOF
+git config --global user.name "Archzfs Buildbot"
+git config --global user.email "$GIT_EMAIL"
+EOF
+
 # gpg
 rm -rf /home/buildbot/.gnupg
 mkdir -p /home/buildbot/.gnupg

@@ -7,6 +7,7 @@
 REMOTE_SERVER=$1
 REMOTE_PATH=$2
 REMOTE_REPO_BASENAME=$3
+ENABLE_AUR_PUSH=$4
 
 # only continue, if inside a container
 if [[ ! -f /.dockerenv ]]; then
@@ -30,6 +31,12 @@ sed -i "s#repo_remote_basepath=\"/home/jalvarez/webapps/default\"#repo_remote_ba
 # add gpg key to config
 key=$(gpg --list-secret-keys --with-colons | awk -F: '/^sec:/ { print $5 }')
 sed -i "s/gpg_sign_key='0EE7A126'/gpg_sign_key='${key}'/" conf.sh
+
+if [[ "$ENABLE_AUR_PUSH" == "true" ]]; then
+    # init + update submodules
+    git submodule init
+    git submodule update --remote
+fi
 
 # create repo dir
 sudo mkdir -p /data/pacman/repo
