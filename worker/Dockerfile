@@ -36,10 +36,6 @@ RUN useradd aur && \
     echo "LANG=en_US.UTF-8" > /etc/locale.conf          && \
     locale-gen
 
-# install archzfs dependencies
-RUN pacman -Sy --noconfirm pkgbuild-introspection && \
-    find /var/cache/pacman/pkg -mindepth 1 -delete
-
 # clean-chroot-manager
 USER aur
 RUN cd /tmp && \
