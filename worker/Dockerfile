@@ -48,7 +48,7 @@ RUN cd /tmp && \
 # run ccm64 once to generate config file
 USER buildbot
 RUN sudo ccm64                      && \
-    sudo mkdir -p /scratch/chroot64
+    sudo mkdir -p /scratch/.chroot64
 
 USER root
 # fix for https://github.com/systemd/systemd/issues/6347
