@@ -39,5 +39,5 @@ if [[ "$ENABLE_AUR_PUSH" == "true" ]]; then
 fi
 
 # create repo dir
-sudo mkdir -p /data/pacman/repo
-sudo chown buildbot:buildbot /data/pacman/repo
+sudo mkdir -p /repo
+sudo chown buildbot:buildbot /repo
