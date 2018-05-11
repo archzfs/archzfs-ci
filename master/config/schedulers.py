@@ -1,6 +1,7 @@
 import os
 import buildbot.plugins
 enableDeploy = os.environ.get("ENABLE_DEPLOY", "false")  == "true"
+enableArchiso = os.environ.get("ENABLE_ARCHISO", "false")  == "true"
 
 ####### SCHEDULERS
 # Configure the Schedulers, which decide how to react to incoming changes
@@ -63,3 +64,20 @@ if enableDeploy:
         hour=3, minute=0))
 
     deploySchedulers = ['force-deploy', 'github master deploy', 'daily deploy']
+
+# archiso schedulers
+if enableArchiso and enableDeploy:
+    # force deploy iso button
+    schedulers.append(buildbot.plugins.schedulers.ForceScheduler(
+        name="force-iso-deploy",
+        builderNames=['archiso']))
+
+    # generate iso's once a month
+    schedulers.append(buildbot.plugins.schedulers.Nightly(
+        name='monthly archiso',
+        change_filter=buildbot.plugins.util.ChangeFilter(branch='master'),
+        builderNames=['archiso'],
+        dayOfMonth=1, hour=6, minute=0))
+
+    deploySchedulers.append('force-iso-deploy')
+    deploySchedulers.append('monthly archiso')

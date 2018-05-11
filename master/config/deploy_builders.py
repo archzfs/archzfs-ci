@@ -2,6 +2,7 @@ import os
 from buildbot.plugins import *
 
 enableAurPush = os.environ.get("ENABLE_AUR_PUSH", "false")  == "true"
+enableArchiso = os.environ.get("ENABLE_ARCHISO", "false")  == "true"
 
 def getDeployBuilders(kernels, buildLock):
 
@@ -107,5 +108,62 @@ def getDeployBuilders(kernels, buildLock):
                             properties={'buildername_report':'build+test+deploy'},
                             locks=[buildLock.access('exclusive')],
                             factory=deploy))
+
+    #
+    # generate the archiso builder
+    #
+    
+    if enableArchiso:
+        archiso = util.BuildFactory()
+
+        # fix permissions
+        archiso.addStep(steps.ShellCommand(
+            name="fix permissions",
+            command="sudo chown -R buildbot:buildbot ."))
+
+        # git update
+        archiso.addStep(steps.Git(
+            repourl='git://github.com/' + os.environ.get("GITHUB_REPO", "archzfs/archzfs") + '.git',
+            mode='incremental',
+            haltOnFailure=True))
+
+        # prepare workdir
+        remoteServer = os.environ.get("REMOTE_REPO_SERVER", "")
+        remotePath = os.environ.get("REMOTE_REPO_PATH", "")
+        remoteRepoBasename = os.environ.get("REMOTE_REPO_BASENAME", "")
+        archiso.addStep(steps.ShellCommand(
+            name="prepare workdir",
+            haltOnFailure=True,
+            command="bash /worker/prepare-workdir.sh '%s' '%s' '%s' '%s'\
+                    " %(remoteServer, remotePath, remoteRepoBasename, os.environ.get("ENABLE_AUR_PUSH", "false"))))
+
+        # build the non git archlinux zfs iso
+        archiso.addStep(steps.ShellCommand(
+            name="archiso/build.sh",
+            command="sudo bash archiso/build.sh -v",
+            haltOnFailure=True,
+            description="Embed zfs into archiso"))
+
+        # build the git archlinux zfs iso
+        archiso.addStep(steps.ShellCommand(
+            name="archiso/build.sh -g",
+            command="sudo bash archiso/build.sh -vg",
+            haltOnFailure=True,
+            description="Embed zfs-git into archiso"))
+        
+        # push isos to remote repo
+        archiso.addStep(steps.ShellCommand(
+            name="archiso/push.sh -i",
+            command="bash push.sh -i -d",
+            haltOnFailure=True,
+            description="Push iso's to remote repo"))
+
+        deployBuilders.append(
+            util.BuilderConfig(name="archiso",
+                                workernames="archzfs-deploy",
+                                workerbuilddir="all",
+                                properties={'buildername_report':'archiso'},
+                                locks=[buildLock.access('exclusive')],
+                                factory=archiso))
 
     return deployBuilders
