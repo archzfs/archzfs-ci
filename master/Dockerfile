@@ -29,9 +29,9 @@ WORKDIR /master
 RUN buildbot create-master .
 
 # copy master.cfg
-ADD master.cfg /master/
+ADD config/* /master/
 USER root
-RUN chown buildbot:buildbot master.cfg
+RUN chown buildbot:buildbot *
 USER buildbot
 RUN buildbot checkconfig master.cfg
 
