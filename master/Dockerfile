@@ -7,7 +7,8 @@ RUN apt-get update && \
                        # needed for buildbot badges
                        libffi-dev libcairo2                             \
                        # email tls support
-                       python3-openssl python3-service-identity
+                       python3-openssl python3-service-identity         \
+                       git
 
 # build master
 RUN pip3 install 'buildbot[bundle]' && \
