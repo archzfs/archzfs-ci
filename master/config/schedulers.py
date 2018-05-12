@@ -7,7 +7,7 @@ enableArchiso = os.environ.get("ENABLE_ARCHISO", "false")  == "true"
 # Configure the Schedulers, which decide how to react to incoming changes
 
 schedulers = []
-deploySchedulers = []
+reportSchedulerNames = []
 
 # build and test all packages if changes accour
 # in any branch or in a pull request
@@ -63,7 +63,7 @@ if enableDeploy:
         builderNames=['build-test-deploy'],
         hour=3, minute=0))
 
-    deploySchedulers = ['force-deploy', 'github master deploy', 'daily deploy']
+    reportSchedulerNames = ['force-deploy', 'github master deploy', 'daily deploy']
 
 # archiso schedulers
 if enableArchiso and enableDeploy:
@@ -79,5 +79,5 @@ if enableArchiso and enableDeploy:
         builderNames=['archiso'],
         dayOfMonth=1, hour=6, minute=0))
 
-    deploySchedulers.append('force-iso-deploy')
-    deploySchedulers.append('monthly archiso')
+    reportSchedulerNames.append('force-iso-deploy')
+    reportSchedulerNames.append('monthly archiso')

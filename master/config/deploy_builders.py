@@ -4,6 +4,10 @@ from buildbot.plugins import *
 enableAurPush = os.environ.get("ENABLE_AUR_PUSH", "false")  == "true"
 enableArchiso = os.environ.get("ENABLE_ARCHISO", "false")  == "true"
 
+reportBuilderNames = ['build-test-deploy']
+if enableArchiso:
+    reportBuilderNames.append('archiso')
+
 def getDeployBuilders(kernels, buildLock):
 
     deployBuilders = []

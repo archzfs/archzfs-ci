@@ -7,7 +7,7 @@ enableEmail = os.environ.get("ENABLE_DEPLOY_NOTIFICATIONS", "false")  == "true"
 
 ####### BUILDBOT REPORTERS
 
-def getReporters(deploySchedulers):
+def getReporters(reportSchedulerNames, reportBuilderNames):
     reporters = []
 
     # github status reporter
@@ -32,8 +32,8 @@ def getReporters(deploySchedulers):
 
         mn = buildbot.plugins.reporters.MailNotifier(
             mode=('failing', 'warnings', 'exception'),
-            builders=('build-test-deploy'),
-            schedulers=deploySchedulers,
+            builders=reportBuilderNames,
+            schedulers=reportSchedulerNames,
             fromaddr=emailFrom,
             sendToInterestedUsers=False,
             extraRecipients=recipients,
