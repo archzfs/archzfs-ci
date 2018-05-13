@@ -23,7 +23,7 @@ services:
         expose:
             - 5432
 
-    cache:
+    pacman-cache:
         image:       archzfs-pacman-cache
         build:       ./pacman-cache
         restart:     always
@@ -42,9 +42,9 @@ services:
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
         links:
             - master
-            - cache
+            - pacman-cache
         depends_on:
-            - cache
+            - pacman-cache
 
     deploy:
         image:       archzfs-deploy
@@ -59,6 +59,6 @@ services:
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
         links:
             - master
-            - cache
+            - pacman-cache
         depends_on:
-            - cache
+            - pacman-cache

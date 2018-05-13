@@ -8,7 +8,7 @@ rm info/admin info/host
 "
 
 # use pacman cache
-echo 'Server = http://cache:8080/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+echo 'Server = http://pacman-cache:8080/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 
 # start systemd (will start the buildbot worker)
 exec /usr/bin/init
