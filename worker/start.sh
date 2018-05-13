@@ -7,6 +7,9 @@ buildbot-worker create-worker . master $WORKER_NAME At3iiquae3AeTaex3eoc
 rm info/admin info/host
 "
 
+# fix ccache permissions
+chown buildbot:buildbot /scratch/ccache
+
 # use pacman cache
 echo 'Server = http://pacman-cache:8080/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 
