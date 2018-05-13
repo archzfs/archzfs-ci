@@ -1,7 +1,7 @@
 FROM base/devel
 MAINTAINER minextu
 
-RUN pacman -Sy --noconfirm python-pip python-twisted python-future git wget && \
+RUN pacman -Sy --noconfirm python-pip python-twisted python-future git wget ccache && \
     find /var/cache/pacman/pkg -mindepth 1 -delete
 
 # install buildbot worker
@@ -42,15 +42,19 @@ RUN cd /tmp && \
     wget https://aur.archlinux.org/cgit/aur.git/snapshot/clean-chroot-manager.tar.gz && \
     tar -xvf clean-chroot-manager.tar.gz && \
     cd clean-chroot-manager              && \
+    # patch for ccache
+    sed -i 's#^source=.*$#source=("https://github.com/minextu/clean-chroot-manager/archive/ccache.zip")#' PKGBUILD && \
+    sed -i 's#^sha256sums=.*$#sha256sums=(SKIP)#' PKGBUILD && \
+    sed -i 's#cd "$pkgname-$pkgver"#cd "$pkgname-ccache"#' PKGBUILD && \
     makepkg -si --noconfirm              && \
     rm -r /tmp/*
 
-# run ccm64 once to generate config file
-USER buildbot
-RUN sudo ccm64                      && \
-    sudo mkdir -p /scratch/.chroot64
-
 USER root
+
+ADD clean-chroot-manager.conf /home/buildbot/.config/
+RUN mkdir -p /scratch/{ccache,.chroot64} && \
+    chown buildbot:buildbot /scratch/ccache
+
 # fix for https://github.com/systemd/systemd/issues/6347
 RUN sed -i 's/--register=no/--register=no --machine \$(uuidgen)/' /usr/bin/arch-nspawn
 
