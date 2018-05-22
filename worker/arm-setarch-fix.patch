@@ -1,0 +1,8 @@
+648c648
+< 	$update_first && arch-nspawn "$copydir" \
+---
+> 	$update_first && arch-nspawn -s "$copydir" \
+668c668
+< 	if arch-nspawn "$copydir" \
+---
+> 	if arch-nspawn -s "$copydir" \

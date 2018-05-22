@@ -61,6 +61,27 @@ def getBuilders(allWorkers, mainWorkers, kernels, buildLock):
         haltOnFailure=True,
         description="Compile common-git packages"))
 
+    # prepare for aarch64
+    commonFactory.addStep(steps.ShellCommand(
+        name="aarch64: prepare",
+        command="sudo makechrootpkg -r /scratch/.chroot64 -l root -I /packages/aarch64-linux-gnu-libutil-linux-*.pkg.tar.xz",
+        haltOnFailure=True,
+        description="Prepare aarch64"))
+
+    # run 'build.sh common make' to compile common packages for aarch64
+    commonFactory.addStep(steps.ShellCommand(
+        name="aarch64: build.sh common make",
+        command="sudo bash build.sh -d common make -c=/root/makepkg.conf.aarch64",
+        haltOnFailure=True,
+        description="Compile common packages"))
+
+    # run 'build.sh common-git make' to compile common-git packages for aarch64
+    commonFactory.addStep(steps.ShellCommand(
+        name="aarch64: build.sh common-git make",
+        command="sudo bash build.sh -d common-git make -c=/root/makepkg.conf.aarch64",
+        haltOnFailure=True,
+        description="Compile common-git packages"))
+    
     builders.append(util.BuilderConfig(
         name="build/common",
         workernames=allWorkers,

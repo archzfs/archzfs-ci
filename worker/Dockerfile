@@ -1,7 +1,7 @@
 FROM base/devel
 MAINTAINER minextu
 
-RUN pacman -Sy --noconfirm python-pip python-twisted python-future git wget ccache && \
+RUN pacman -Sy --noconfirm python-pip python-twisted python-future git wget ccache aarch64-linux-gnu-gcc && \
     find /var/cache/pacman/pkg -mindepth 1 -delete
 
 # install buildbot worker
@@ -30,33 +30,48 @@ RUN groupadd -r buildbot && \
     echo "buildbot ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # aur prep
-RUN useradd aur && \
+RUN useradd -m aur && \
     echo "aur ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers  && \
     sed -i '/en_US\.UTF-8 UTF-8/s/^#//' /etc/locale.gen && \
     echo "LANG=en_US.UTF-8" > /etc/locale.conf          && \
     locale-gen
 
 # clean-chroot-manager
+ADD clean-chroot-manager.conf /home/buildbot/.config/
+RUN mkdir -p /scratch/{ccache,.chroot64} && \
+    chown buildbot:buildbot /scratch/ccache
 USER aur
 RUN cd /tmp && \
     wget https://aur.archlinux.org/cgit/aur.git/snapshot/clean-chroot-manager.tar.gz && \
     tar -xvf clean-chroot-manager.tar.gz && \
     cd clean-chroot-manager              && \
-    # patch for ccache
-    sed -i 's#^source=.*$#source=("https://github.com/minextu/clean-chroot-manager/archive/ccache.zip")#' PKGBUILD && \
+    # patch for ccache, arm
+    sed -i 's#^source=.*$#source=("https://github.com/minextu/clean-chroot-manager/archive/master.zip")#' PKGBUILD && \
     sed -i 's#^sha256sums=.*$#sha256sums=(SKIP)#' PKGBUILD && \
-    sed -i 's#cd "$pkgname-$pkgver"#cd "$pkgname-ccache"#' PKGBUILD && \
+    sed -i 's#cd "$pkgname-$pkgver"#cd "$pkgname-master"#' PKGBUILD && \
     makepkg -si --noconfirm              && \
+    rm -r /tmp/*
+
+# aarch64-linux-gnu-libutil-linux
+RUN cd /tmp && \
+    gpg --recv-keys B0C64D14301CC6EFAEDF60E4E4B71D5EEC39C284 && \
+    wget https://aur.archlinux.org/cgit/aur.git/snapshot/aarch64-linux-gnu-util-linux.tar.gz && \
+    tar -xvf aarch64-linux-gnu-util-linux.tar.gz && \
+    cd aarch64-linux-gnu-util-linux              && \
+    makepkg -s --noconfirm                       && \
+    sudo mkdir /packages                         && \
+    sudo cp *.pkg.tar.xz /packages/              && \
     rm -r /tmp/*
 
 USER root
 
-ADD clean-chroot-manager.conf /home/buildbot/.config/
-RUN mkdir -p /scratch/{ccache,.chroot64} && \
-    chown buildbot:buildbot /scratch/ccache
-
 # fix for https://github.com/systemd/systemd/issues/6347
 RUN sed -i 's/--register=no/--register=no --machine \$(uuidgen)/' /usr/bin/arch-nspawn
+# fix for https://bugs.archlinux.org/task/40946 (makechrootpkg never got patched)
+ADD arm-setarch-fix.patch /root/
+RUN patch -i /root/arm-setarch-fix.patch /usr/bin/makechrootpkg
+
+ADD makepkg.conf.aarch64 /root/
 
 ADD start.sh /
 VOLUME [ "/sys/fs/cgroup" ]
