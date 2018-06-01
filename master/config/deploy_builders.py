@@ -4,7 +4,7 @@ from buildbot.plugins import *
 enableAurPush = os.environ.get("ENABLE_AUR_PUSH", "false")  == "true"
 enableArchiso = os.environ.get("ENABLE_ARCHISO", "false")  == "true"
 
-reportBuilderNames = ['build-test-deploy']
+reportBuilderNames = ['build-test-deploy-to-testing', 'deploy-to-stable']
 if enableArchiso:
     reportBuilderNames.append('archiso')
 
@@ -13,20 +13,56 @@ def getDeployBuilders(kernels, buildLock):
     deployBuilders = []
 
     #
-    # generate the deploy builder
+    # generate the deploy testing builder
     #
 
-    deploy = util.BuildFactory()
+    deployTesting = util.BuildFactory()
 
     # add packages to repo
-    deploy.addStep(steps.ShellCommand(
+    deployTesting.addStep(steps.ShellCommand(
+        name="repo.sh all test",
+        command="bash repo.sh -d all test",
+        haltOnFailure=True,
+        description="Add packages to repo"))
+
+    # push packages to remote repo
+    deployTesting.addStep(steps.ShellCommand(
+        name="push.sh -t",
+        command="bash push.sh -t -d",
+        haltOnFailure=True,
+        description="Push packages to remote testing repo"))
+
+    # push packages to the aur
+    if enableAurPush:
+        deployTesting.addStep(steps.ShellCommand(
+            name="push.sh -p all",
+            command="bash push.sh -p -d all",
+            haltOnFailure=True,
+            description="Push packages to the AUR"))
+
+    deployBuilders.append(util.BuilderConfig(
+        name="deploy-to-testing",
+        description="push all packages to the testing repo",
+        workernames="archzfs-deploy",
+        workerbuilddir="all",
+        properties={'buildername_report':'deploy-to-testing'},
+        factory=deployTesting))
+
+    #
+    # generate the deploy stable builder
+    #
+
+    deployStable = util.BuildFactory()
+
+    # add packages to repo
+    deployStable.addStep(steps.ShellCommand(
         name="repo.sh all azfs",
         command="bash repo.sh -d all azfs",
         haltOnFailure=True,
         description="Add packages to repo"))
 
     # push packages to remote repo
-    deploy.addStep(steps.ShellCommand(
+    deployStable.addStep(steps.ShellCommand(
         name="push.sh -r",
         command="bash push.sh -r -d",
         haltOnFailure=True,
@@ -34,21 +70,22 @@ def getDeployBuilders(kernels, buildLock):
 
     # push packages to the aur
     if enableAurPush:
-        deploy.addStep(steps.ShellCommand(
+        deployStable.addStep(steps.ShellCommand(
             name="push.sh -p all",
             command="bash push.sh -p -d all",
             haltOnFailure=True,
             description="Push packages to the AUR"))
 
     deployBuilders.append(util.BuilderConfig(
-        name="deploy",
+        name="deploy-to-stable",
+        description="push all packages to the stable repo",
         workernames="archzfs-deploy",
         workerbuilddir="all",
-        properties={'buildername_report':'deploy'},
-        factory=deploy))
+        properties={'buildername_report':'deploy-to-stable'},
+        factory=deployStable))
 
     #
-    # generate the test+build+deploy builder
+    # generate the test+build+deploy:testing builder
     #
 
     deploy = util.BuildFactory()
@@ -100,16 +137,17 @@ def getDeployBuilders(kernels, buildLock):
 
     # trigger deploy builder
     deploy.addStep(steps.Trigger(
-        name="deploy",
-        schedulerNames=['deploy'],
+        name="deploy-to-testing",
+        schedulerNames=['deploy-to-testing'],
         waitForFinish=True,
         haltOnFailure=True))
 
     deployBuilders.append(
-        util.BuilderConfig(name="build-test-deploy",
+        util.BuilderConfig(name="build-test-deploy-to-testing",
+                            description="build, test and deploy all packages to the testing repo",
                             workernames="archzfs-deploy",
                             workerbuilddir="all",
-                            properties={'buildername_report':'build+test+deploy'},
+                            properties={'buildername_report':'build+test+deploy:testing'},
                             locks=[buildLock.access('exclusive')],
                             factory=deploy))
 
@@ -164,6 +202,7 @@ def getDeployBuilders(kernels, buildLock):
 
         deployBuilders.append(
             util.BuilderConfig(name="archiso",
+                                description="build and deploy an archiso with zfs",
                                 workernames="archzfs-deploy",
                                 workerbuilddir="all",
                                 properties={'buildername_report':'archiso'},

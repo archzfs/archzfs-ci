@@ -9,7 +9,7 @@ ADD secrets/* /worker/secrets/
 RUN chown -R buildbot:buildbot /worker/secrets && \
     chmod -R go-rwx /worker/secrets
 
-# copy push.sh
+# copy scripts
 ADD prepare-workdir.sh /worker/
 
 ADD init_deploy.sh /

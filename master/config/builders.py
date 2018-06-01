@@ -28,8 +28,17 @@ def getBuilders(allWorkers, mainWorkers, kernels, buildLock):
         haltOnFailure=True,
         description=util.Interpolate("Compile %(prop:kernel)s packages")))
 
+    # test the resulting packages (not implemented, yet)
+    kernelFactory.addStep(steps.ShellCommand(
+        name=util.Interpolate("test.sh ..."),
+        command=util.Interpolate("sudo bash test.sh ..."),
+        haltOnFailure=True,
+        doStepIf=False,
+        description=util.Interpolate("Test %(prop:kernel)s packages")))
+
     builders.append(util.BuilderConfig(
         name="build-test/kernel",
+        description="build and test a kernel",
         workernames=allWorkers,
         canStartBuild=canStartBuild,
         workerbuilddir="all",
@@ -63,6 +72,7 @@ def getBuilders(allWorkers, mainWorkers, kernels, buildLock):
 
     builders.append(util.BuilderConfig(
         name="build/common",
+        description="build the common packages",
         workernames=allWorkers,
         canStartBuild=canStartBuild,
         workerbuilddir="all",
@@ -116,6 +126,7 @@ def getBuilders(allWorkers, mainWorkers, kernels, buildLock):
 
     builders.append(util.BuilderConfig(
         name="build-test",
+        description="build and test all packages",
         workernames=mainWorkers,
         workerbuilddir="all",
         properties={'buildername_report':'build+test'},

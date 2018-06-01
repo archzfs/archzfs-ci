@@ -39,37 +39,45 @@ schedulers.append(buildbot.plugins.schedulers.Triggerable(
 
 # deploy schedulers
 if enableDeploy:
-    # add deploy builder
+    # add deploy testing builder
     schedulers.append(buildbot.plugins.schedulers.Triggerable(
-        name="deploy",
-        builderNames=['deploy']))
+        name="deploy-to-testing",
+        builderNames=['deploy-to-testing']))
 
-    # force deploy button
+    # force deploy testing button
     schedulers.append(buildbot.plugins.schedulers.ForceScheduler(
-        name="force-deploy",
-        builderNames=['build-test-deploy']))
+        name="force-deploy-to-testing",
+        buttonName="force deploy to testing",
+        builderNames=['build-test-deploy-to-testing']))
+
+    #  deploy stable button
+    schedulers.append(buildbot.plugins.schedulers.ForceScheduler(
+        name="force-deploy-to-stable",
+        buttonName="deploy to stable",
+        builderNames=['deploy-to-stable']))
 
     # deploy when changes to master occour
     schedulers.append(buildbot.plugins.schedulers.SingleBranchScheduler(
         name="github master deploy",
         change_filter=buildbot.plugins.util.ChangeFilter(branch='master'),
         treeStableTimer=10,
-        builderNames=['build-test-deploy']))
+        builderNames=['build-test-deploy-to-testing']))
 
     # deploy once a day
     schedulers.append(buildbot.plugins.schedulers.Nightly(
         name='daily deploy',
         change_filter=buildbot.plugins.util.ChangeFilter(branch='master'),
-        builderNames=['build-test-deploy'],
+        builderNames=['build-test-deploy-to-testing'],
         hour=3, minute=0))
 
-    reportSchedulerNames = ['force-deploy', 'github master deploy', 'daily deploy']
+    reportSchedulerNames = ['force-deploy-to-testing', 'force-deploy-to-stable', 'github master deploy', 'daily deploy']
 
 # archiso schedulers
 if enableArchiso and enableDeploy:
     # force deploy iso button
     schedulers.append(buildbot.plugins.schedulers.ForceScheduler(
         name="force-iso-deploy",
+        buttonName="force iso deploy",
         builderNames=['archiso']))
 
     # generate iso's once a month

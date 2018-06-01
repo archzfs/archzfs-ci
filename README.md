@@ -55,7 +55,7 @@ When enabled, packages will get uploaded to a repository after building and test
 ### Setup
 You will need to have a webserver with `ssh` and `rsync` installed to host the repository.
 
-1. Create two folder on the repo server: a repo folder and an archive folder using the same name prefixed with `archive_` (e.g. `/var/www/archzfs` and `/var/www/archive_archzfs`). Grant access to a user, that will be used to update the repo.
+1. Create the repo folders on the repo server: a repo folder, a testing repo suffixed with `tesing` and two archive folders using the previous names prefixed with `archive_` (e.g. `/var/www/archzfs`  `/var/www/archzfs-testing`, `/var/www/archive_archzfs` and `/var/www/archive_archzfs-testing`). Grant access to a user, that will be used to update the repo.
 
 2. Generate a new ssh key with no passphrase and save it in `deploy/secrets/ssh_key(.pub)`.
 
