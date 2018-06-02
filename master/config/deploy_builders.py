@@ -32,14 +32,6 @@ def getDeployBuilders(kernels, buildLock):
         haltOnFailure=True,
         description="Push packages to remote testing repo"))
 
-    # push packages to the aur
-    if enableAurPush:
-        deployTesting.addStep(steps.ShellCommand(
-            name="push.sh -p all",
-            command="bash push.sh -p -d all",
-            haltOnFailure=True,
-            description="Push packages to the AUR"))
-
     deployBuilders.append(util.BuilderConfig(
         name="deploy-to-testing",
         description="push all packages to the testing repo",
