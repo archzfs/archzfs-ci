@@ -61,4 +61,5 @@ services:
             - master
             - pacman-cache
         depends_on:
+            - worker
             - pacman-cache
