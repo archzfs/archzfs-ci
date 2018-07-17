@@ -12,15 +12,16 @@ reportSchedulerNames = []
 # build and test all packages if changes accour
 # in any branch or in a pull request
 # ignore master branch if deploy is enabled
-if enableDeploy:
-    changeFilter = buildbot.plugins.util.ChangeFilter(branch_re='(?!master)');
-else:
-    changeFilter = None
-schedulers.append(buildbot.plugins.schedulers.AnyBranchScheduler(
-    name="github any branch",
-    treeStableTimer=10,
-    change_filter=changeFilter,
-    builderNames= ["build-test"]))
+
+#if enableDeploy:
+#    changeFilter = buildbot.plugins.util.ChangeFilter(branch_re='(?!master)');
+#else:
+#    changeFilter = None
+#schedulers.append(buildbot.plugins.schedulers.AnyBranchScheduler(
+#    name="github any branch",
+#    treeStableTimer=10,
+#    change_filter=changeFilter,
+#    builderNames= ["build-test"]))
 
 # add force button in user interface
 schedulers.append(buildbot.plugins.schedulers.ForceScheduler(
