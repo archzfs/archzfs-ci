@@ -52,7 +52,7 @@ def getBuilders(allWorkers, mainWorkers, kernels, buildLock):
     # run 'build.sh all update' to generate all PKGBUILDs
     utilsFactory.addStep(steps.ShellCommand(
         name="build.sh all update",
-        command="sudo bash build.sh -d -u all update",
+        command="sudo bash build.sh -d -u utils " + ' '.join(kernels) + " update",
         haltOnFailure=True,
         description="Generate all PKGBUILDs"))
 

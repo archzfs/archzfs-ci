@@ -1,0 +1,26 @@
+_pkgname=clean-chroot-manager
+_branch="custom-repo"
+
+pkgname=clean-chroot-manager-custom
+pkgver=2.90
+pkgrel=1
+pkgdesc='Wrapper scripts for managing clean chroots.'
+arch=('any')
+url='https://github.com/graysky2/clean-chroot-manager'
+license=('MIT')
+depends=('devtools>=20180528-1' 'rsync')
+conflicts=('clean_chroot_manager')
+replaces=('clean_chroot_manager')
+source=("https://github.com/minextu/clean-chroot-manager/archive/${_branch}.zip")
+sha256sums=('SKIP')
+
+build() {
+  cd "$_pkgname-$_branch"
+  make
+}
+
+package() {
+  cd "$_pkgname-$_branch"
+  make DESTDIR="$pkgdir" install
+  install -Dm644 MIT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

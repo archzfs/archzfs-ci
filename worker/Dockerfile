@@ -21,11 +21,9 @@ RUN useradd aur && \
     locale-gen
 
 # clean-chroot-manager
+COPY ccm-PKGBUILD /tmp/ccm/PKGBUILD
 USER aur
-RUN cd /tmp && \
-    wget https://aur.archlinux.org/cgit/aur.git/snapshot/clean-chroot-manager.tar.gz && \
-    tar -xvf clean-chroot-manager.tar.gz && \
-    cd clean-chroot-manager              && \
+RUN cd /tmp/ccm && sudo chown aur:aur .  && \
     makepkg -si --noconfirm              && \
     rm -r /tmp/*
 
@@ -34,9 +32,13 @@ USER buildbot
 RUN sudo ccm64                      && \
     sudo mkdir -p /scratch/.chroot64
 
+# copy config file and set permissions
+USER root
+COPY clean-chroot-manager.conf /home/buildbot/.config/clean-chroot-manager.conf
+RUN mkdir -p /scratch/.chroot64 && \
+    chown buildbot:buildbot /home/buildbot/.config/clean-chroot-manager.conf
 
 # setup systemd to only start the buildbot worker
-USER root
 ADD buildbot-worker.service /etc/systemd/system/
 ADD worker.target /etc/systemd/system/
 RUN systemctl set-default worker.target

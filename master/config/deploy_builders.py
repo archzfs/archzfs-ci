@@ -21,7 +21,7 @@ def getDeployBuilders(kernels, buildLock):
     # add packages to repo
     deployTesting.addStep(steps.ShellCommand(
         name="repo.sh all test",
-        command="bash repo.sh -d all test",
+        command="bash repo.sh -d utils " + ' '.join(kernels) + " test",
         haltOnFailure=True,
         description="Add packages to repo"))
 
@@ -49,7 +49,7 @@ def getDeployBuilders(kernels, buildLock):
     # add packages to repo
     deployStable.addStep(steps.ShellCommand(
         name="repo.sh all azfs",
-        command="bash repo.sh -d all azfs",
+        command="bash repo.sh -d utils " + ' '.join(kernels) + " azfs",
         haltOnFailure=True,
         description="Add packages to repo"))
 
@@ -64,7 +64,7 @@ def getDeployBuilders(kernels, buildLock):
     if enableAurPush:
         deployStable.addStep(steps.ShellCommand(
             name="push.sh -p all",
-            command="bash push.sh -p -d all",
+            command="bash push.sh -p -d utils " + ' '.join(kernels),
             haltOnFailure=True,
             description="Push packages to the AUR"))
 
