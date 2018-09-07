@@ -16,7 +16,9 @@ RUN pip3 install 'buildbot[bundle]' && \
     pip3 install txrequests         && \
     # needed for badges
     pip3 install buildbot_pkg       && \
-    pip3 install buildbot-badges
+    pip3 install buildbot-badges    && \
+    # update outdated dependencies
+    pip3 install --upgrade six
 
 # add user and directory
 RUN groupadd -r buildbot            && \
