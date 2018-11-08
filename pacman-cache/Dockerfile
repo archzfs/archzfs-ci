@@ -2,7 +2,7 @@ FROM base/devel
 MAINTAINER minextu
 
 # install nginx
-RUN pacman -Sy --noconfirm nginx && \
+RUN pacman -Sy --noconfirm nginx pacman-contrib && \
     find /var/cache/pacman/pkg -mindepth 1 -delete
 
 # setup nginx

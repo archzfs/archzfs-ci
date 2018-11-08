@@ -24,7 +24,7 @@ RUN systemctl enable buildbot-worker.service
 
 # add buildbot user and give passwordless sudo access (needed for archzfs build scripts)
 RUN groupadd -r buildbot && \
-    useradd -m -r -g buildbot buildbot && \
+    useradd -m -g buildbot buildbot && \
     mkdir /worker && \
     chown buildbot:buildbot /worker && \
     echo "buildbot ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
@@ -51,9 +51,6 @@ RUN sudo ccm64                      && \
     sudo mkdir -p /scratch/.chroot64
 
 USER root
-# fix for https://github.com/systemd/systemd/issues/6347
-RUN sed -i 's/--register=no/--register=no --machine \$(uuidgen)/' /usr/bin/arch-nspawn
-
 ADD start.sh /
 VOLUME [ "/sys/fs/cgroup" ]
 CMD ["sh", "/start.sh"]
