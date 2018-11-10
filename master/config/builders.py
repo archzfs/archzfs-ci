@@ -45,39 +45,32 @@ def getBuilders(allWorkers, mainWorkers, kernels, buildLock):
         factory=kernelFactory))
 
     #
-    # generate build/common builder
+    # generate build/utils builder
     #
 
-    commonFactory = util.BuildFactory();
+    utilsFactory = util.BuildFactory();
     # run 'build.sh all update' to generate all PKGBUILDs
-    commonFactory.addStep(steps.ShellCommand(
+    utilsFactory.addStep(steps.ShellCommand(
         name="build.sh all update",
         command="sudo bash build.sh -d -u all update",
         haltOnFailure=True,
         description="Generate all PKGBUILDs"))
 
-    # run 'build.sh common make' to compile common packages
-    commonFactory.addStep(steps.ShellCommand(
-        name="build.sh common make",
-        command="sudo bash build.sh -d common make",
+    # run 'build.sh utils make' to compile utils packages
+    utilsFactory.addStep(steps.ShellCommand(
+        name="build.sh utils make",
+        command="sudo bash build.sh -d utils make",
         haltOnFailure=True,
-        description="Compile common packages"))
-
-    # run 'build.sh common-git make' to compile common-git packages
-    commonFactory.addStep(steps.ShellCommand(
-        name="build.sh common-git make",
-        command="sudo bash build.sh -d common-git make",
-        haltOnFailure=True,
-        description="Compile common-git packages"))
+        description="Compile utils packages"))
 
     builders.append(util.BuilderConfig(
-        name="build/common",
-        description="build the common packages",
+        name="build/utils",
+        description="build utils packages",
         workernames=allWorkers,
         canStartBuild=canStartBuild,
         workerbuilddir="all",
-        properties={'buildername_report':'build/common'},
-        factory=commonFactory))
+        properties={'buildername_report':'build/utils'},
+        factory=utilsFactory))
 
     #
     # generate test+build builder
@@ -102,10 +95,10 @@ def getBuilders(allWorkers, mainWorkers, kernels, buildLock):
         name="prepare working directory",
         command="sed -i 's/demizer/buildbot/' conf.sh && sudo ccm64 d || true"))
 
-    # trigger build for common packages
+    # trigger build for utils packages
     build.addStep(steps.Trigger(
-        name="build/common",
-        schedulerNames=['build/common'],
+        name="build/utils",
+        schedulerNames=['build/utils'],
         waitForFinish=True,
         set_properties={
             'worker': util.Property('workername'),

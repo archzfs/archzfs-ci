@@ -103,10 +103,10 @@ def getDeployBuilders(kernels, buildLock):
         command="bash /worker/prepare-workdir.sh '%s' '%s' '%s' '%s'\
                 " %(remoteServer, remotePath, remoteRepoBasename, os.environ.get("ENABLE_AUR_PUSH", "false"))))
 
-    # trigger build for common packages
+    # trigger build for utils packages
     deploy.addStep(steps.Trigger(
-        name="build/common",
-        schedulerNames=['build/common'],
+        name="build/utils",
+        schedulerNames=['build/utils'],
         waitForFinish=True,
         haltOnFailure=True,
         set_properties={

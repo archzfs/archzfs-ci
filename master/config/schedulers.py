@@ -28,10 +28,10 @@ schedulers.append(buildbot.plugins.schedulers.ForceScheduler(
     name="force",
     builderNames=["build-test"]))
 
-# add common builder
+# add utils builder
 schedulers.append(buildbot.plugins.schedulers.Triggerable(
-    name="build/common",
-    builderNames=["build/common"]))
+    name="build/utils",
+    builderNames=["build/utils"]))
 
 # add kernel builder
 schedulers.append(buildbot.plugins.schedulers.Triggerable(
