@@ -1,9 +1,8 @@
-FROM base/devel
+FROM archlinux/base
 MAINTAINER minextu
 
 # install nginx
-RUN pacman -Sy --noconfirm nginx pacman-contrib && \
-    find /var/cache/pacman/pkg -mindepth 1 -delete
+RUN pacman -Syu --noconfirm nginx pacman-contrib
 
 # setup nginx
 ADD nginx.conf /etc/nginx/

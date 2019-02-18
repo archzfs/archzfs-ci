@@ -18,7 +18,7 @@ RUN pip3 install 'buildbot[bundle]' && \
     pip3 install buildbot_pkg       && \
     pip3 install buildbot-badges    && \
     # update outdated dependencies
-    pip3 install --upgrade six
+    pip3 install --upgrade six cairocffi
 
 # add user and directory
 RUN groupadd -r buildbot            && \

@@ -1,8 +1,7 @@
 FROM archzfs-worker
 MAINTAINER minextu
 
-RUN pacman -Sy --noconfirm expect archiso && \
-    find /var/cache/pacman/pkg -mindepth 1 -delete
+RUN pacman -Sy --noconfirm expect archiso
 
 # copy secrets
 ADD secrets/* /worker/secrets/
