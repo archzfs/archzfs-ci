@@ -2,7 +2,7 @@ FROM archlinux/base
 MAINTAINER minextu
 
 # install nginx
-RUN pacman -Syu --noconfirm nginx pacman-contrib
+RUN pacman -Syu --noconfirm nginx pacman-contrib gawk
 
 # setup nginx
 ADD nginx.conf /etc/nginx/
