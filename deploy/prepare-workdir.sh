@@ -19,7 +19,7 @@ fi
 git checkout conf.sh
 
 # change builduser
-sed -i 's/demizer/buildbot/' conf.sh
+sed -i 's/jan/buildbot/' conf.sh
 
 # change repo name
 sed -i "s/repo_basename=\"archzfs\"/repo_basename=\"${REMOTE_REPO_BASENAME}\"/" conf.sh
