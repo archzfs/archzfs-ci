@@ -93,7 +93,7 @@ def getBuilders(allWorkers, mainWorkers, kernels, buildLock):
     # adjust config file, delete all previous build packages
     build.addStep(steps.ShellCommand(
         name="prepare working directory",
-        command="sed -i 's/demizer/buildbot/' conf.sh && sudo ccm64 d || true"))
+        command="sed -i 's/jan/buildbot/' conf.sh && sudo ccm64 d || true"))
 
     # trigger build for utils packages
     build.addStep(steps.Trigger(
