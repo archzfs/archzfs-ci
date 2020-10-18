@@ -31,7 +31,7 @@ RUN cd /tmp && \
 
 # run ccm64 once to generate config file
 USER buildbot
-RUN sudo ccm64                      && \
+RUN sudo ccm64 -h                      && \
     sudo mkdir -p /scratch/.chroot64
 
 
