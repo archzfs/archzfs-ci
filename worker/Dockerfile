@@ -1,7 +1,7 @@
-FROM archlinux/base
+FROM archlinux/archlinux:base-devel
 MAINTAINER minextu
 
-RUN pacman -Syu --noconfirm --needed python-pip python-twisted python-future git wget base-devel systemd-sysvcompat openresolv vi
+RUN pacman -Syu --noconfirm --needed python-pip python-twisted python-future git wget systemd-sysvcompat openresolv vi
 
 # install buildbot worker
 RUN pip install buildbot-worker
@@ -31,7 +31,7 @@ RUN cd /tmp && \
 
 # run ccm64 once to generate config file
 USER buildbot
-RUN sudo ccm64 -h                      && \
+RUN sudo ccm64 p                      && \
     sudo mkdir -p /scratch/.chroot64
 
 
