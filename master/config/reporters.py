@@ -19,26 +19,26 @@ def getReporters(reportSchedulerNames, reportBuilderNames):
         )
         reporters.append(gs)
 
-    # email notifications
-    if enableDeploy and enableEmail:
-        emailFrom = os.environ.get("EMAIL_FROM", "noreply@example.com")
-        recipients = os.environ.get("NOTIFY_RECIPIENTS", "").split('|')
-        smtpServer = os.environ.get("SMTP_SERVER", "")
-        smtpPort = int(os.environ.get("SMTP_PORT", "587"))
-        smtpUser = os.environ.get("SMTP_USER", "")
-        smtpTls = os.environ.get("SMTP_TLS", "false")  == "true"
-        smtpPassword = os.environ.get("SMTP_PASSWORD", "")
+    # # email notifications
+    # if enableDeploy and enableEmail:
+    #     emailFrom = os.environ.get("EMAIL_FROM", "noreply@example.com")
+    #     recipients = os.environ.get("NOTIFY_RECIPIENTS", "").split('|')
+    #     smtpServer = os.environ.get("SMTP_SERVER", "")
+    #     smtpPort = int(os.environ.get("SMTP_PORT", "587"))
+    #     smtpUser = os.environ.get("SMTP_USER", "")
+    #     smtpTls = os.environ.get("SMTP_TLS", "false")  == "true"
+    #     smtpPassword = os.environ.get("SMTP_PASSWORD", "")
 
-        mn = buildbot.plugins.reporters.MailNotifier(
-            mode=('failing', 'warnings', 'exception'),
-            builders=reportBuilderNames,
-            schedulers=reportSchedulerNames,
-            fromaddr=emailFrom,
-            sendToInterestedUsers=False,
-            extraRecipients=recipients,
-            relayhost=smtpServer, smtpPort=smtpPort, useTls=smtpTls,
-            smtpUser=smtpUser,
-            smtpPassword=smtpPassword)
-        reporters.append(mn)
+    #     mn = buildbot.plugins.reporters.MailNotifier(
+    #         mode=('failing', 'warnings', 'exception'),
+    #         builders=reportBuilderNames,
+    #         schedulers=reportSchedulerNames,
+    #         fromaddr=emailFrom,
+    #         sendToInterestedUsers=False,
+    #         extraRecipients=recipients,
+    #         relayhost=smtpServer, smtpPort=smtpPort, useTls=smtpTls,
+    #         smtpUser=smtpUser,
+    #         smtpPassword=smtpPassword)
+    #     reporters.append(mn)
         
     return reporters
