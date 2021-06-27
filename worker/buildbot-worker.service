@@ -6,7 +6,7 @@ User=buildbot
 Group=buildbot
 WorkingDirectory=/worker
 ExecStartPre=/usr/bin/rm -f /worker/twistd.pid
-ExecStart=/usr/bin/buildbot-worker start --nodaemon
+ExecStart=/usr/bin/buildbot-worker start --nodaemon /worker
 
 [Install]
 WantedBy=multi-user.target

@@ -1,5 +1,4 @@
-FROM archlinux/base
-MAINTAINER minextu
+FROM archlinux:base-devel
 
 # install nginx
 RUN pacman -Syu --noconfirm nginx pacman-contrib gawk

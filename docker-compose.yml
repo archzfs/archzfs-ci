@@ -37,9 +37,10 @@ services:
         environment:
             - WORKER_NAME=archzfs-worker
         restart:     always
-        privileged:  true
-        volumes:
-            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        privileged: true
+        tmpfs:
+            - /run
+            - /tmp
         links:
             - master
             - pacman-cache
@@ -54,9 +55,10 @@ services:
         env_file:
             - conf.env
         restart:     always
-        privileged:  true
-        volumes:
-            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        privileged: true
+        tmpfs:
+            - /run
+            - /tmp
         links:
             - master
             - pacman-cache

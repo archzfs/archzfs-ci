@@ -1,5 +1,4 @@
 FROM archzfs-worker
-MAINTAINER minextu
 
 RUN pacman -Sy --noconfirm expect archiso
 

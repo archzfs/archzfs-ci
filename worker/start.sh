@@ -1,5 +1,7 @@
 #!/bin/sh
 
+systemd-machine-id-setup
+
 # create a new worker
 su -s /bin/sh buildbot -c "
 cd /worker
@@ -10,5 +12,12 @@ rm info/admin info/host
 # use pacman cache
 echo 'Server = http://pacman-cache:8080/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 
+# init build chroot
+su -s /bin/sh buildbot -c "
+sudo ccm64 c || sudo ccm64 u
+sudo mkdir -p /scratch/.buildroot/root/repo
+sudo chmod o+rw /scratch/.buildroot/root/repo
+"
+
 # start systemd (will start the buildbot worker)
-exec /usr/bin/init
+exec /lib/systemd/systemd

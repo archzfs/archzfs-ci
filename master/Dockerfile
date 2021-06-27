@@ -1,5 +1,4 @@
 FROM debian:buster
-MAINTAINER minextu
 
 # install dependencies
 RUN apt-get update && \
@@ -8,7 +7,13 @@ RUN apt-get update && \
                        libffi-dev libcairo2                             \
                        # email tls support
                        python3-openssl python3-service-identity         \
-                       git
+                       # rust + cryptography
+                       curl libssl-dev                                  \
+                       git 
+
+# install rust
+RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 # build master
 RUN pip3 install 'buildbot[bundle]' && \

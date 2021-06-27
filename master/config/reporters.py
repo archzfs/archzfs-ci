@@ -15,9 +15,8 @@ def getReporters(reportSchedulerNames, reportBuilderNames):
         context = buildbot.plugins.util.Interpolate("bb/%(prop:buildername_report)s")
         gs = buildbot.plugins.reporters.GitHubStatusPush(
             token=os.environ.get("GITHUB_TOKEN", ""),
-            context=context,
-            startDescription='Build started.',
-            endDescription='Build done.')
+            context=context
+        )
         reporters.append(gs)
 
     # email notifications
