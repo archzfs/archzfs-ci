@@ -89,7 +89,7 @@ def getDeployBuilders(kernels, buildLock):
 
     # git update
     deploy.addStep(steps.Git(
-        repourl='git://github.com/' + os.environ.get("GITHUB_REPO", "archzfs/archzfs") + '.git',
+        repourl='https://github.com/' + os.environ.get("GITHUB_REPO", "archzfs/archzfs") + '.git',
         mode='incremental',
         haltOnFailure=True))
 
@@ -157,7 +157,7 @@ def getDeployBuilders(kernels, buildLock):
 
         # git update
         archiso.addStep(steps.Git(
-            repourl='git://github.com/' + os.environ.get("GITHUB_REPO", "archzfs/archzfs") + '.git',
+            repourl='https://github.com/' + os.environ.get("GITHUB_REPO", "archzfs/archzfs") + '.git',
             mode='incremental',
             haltOnFailure=True))
 

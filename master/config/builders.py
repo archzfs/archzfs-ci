@@ -85,7 +85,7 @@ def getBuilders(allWorkers, mainWorkers, kernels, buildLock):
 
     # git update
     build.addStep(steps.Git(
-        repourl='git://github.com/' + githubRepo + '.git',
+        repourl='https://github.com/' + githubRepo + '.git',
         mode='full',
         method='copy',
         haltOnFailure=True))
