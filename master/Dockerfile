@@ -11,9 +11,8 @@ RUN apt-get update && \
                        curl libssl-dev                                  \
                        git 
 
-# install rust
-RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
-ENV PATH="/root/.cargo/bin:${PATH}"
+# update outdated dependencies
+RUN pip3 install --upgrade six cairocffi attrs service_identity pyOpenSSL
 
 # build master
 RUN pip3 install 'buildbot[bundle]' && \
