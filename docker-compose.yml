@@ -23,14 +23,15 @@ services:
         expose:
             - 5432
 
-    pacman-cache:
-        image:       archzfs-pacman-cache
-        build:       ./pacman-cache
-        restart:     always
-        volumes:
-            - ./cache/pacman:/srv/http/pacman-cache:rw
-        expose:
-            - 8080
+    # pacman-cache:
+    #     image:       archzfs-pacman-cache
+    #     build:       ./pacman-cache
+    #     restart:     always
+    #     volumes:
+    #         - ./cache/pacman:/srv/http/pacman-cache:rw
+    #     expose:
+    #         - 8080
+
     worker:
         image:       archzfs-worker
         build:       ./worker
@@ -43,9 +44,6 @@ services:
             - /tmp
         links:
             - master
-            - pacman-cache
-        depends_on:
-            - pacman-cache
 
     deploy:
         image:       archzfs-deploy
@@ -61,7 +59,5 @@ services:
             - /tmp
         links:
             - master
-            - pacman-cache
         depends_on:
             - worker
-            - pacman-cache

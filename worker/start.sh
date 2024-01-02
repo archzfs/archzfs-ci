@@ -10,7 +10,7 @@ rm info/admin info/host
 "
 
 # use pacman cache
-echo 'Server = http://pacman-cache:8080/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+#echo 'Server = http://pacman-cache:8080/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 
 # init build chroot
 su -s /bin/sh buildbot -c "
