@@ -28,8 +28,10 @@ USER buildbot
 RUN pipx install buildbot-worker
 
 # run ccm64 once to generate config file
+# use custom pacman conf from devtools as archlinux image pacman.conf has NoExtract rules which interfere with builds
 USER buildbot
 RUN sudo ccm64 p                      && \
+    echo 'CUSTOM_PACMAN_CONF="/usr/share/devtools/pacman.conf.d/extra.conf"' >> ~/.config/clean-chroot-manager.conf && \
     sudo mkdir -p /scratch/.buildroot
 
 # set git directories to be safe (workaround for https://github.com/actions/checkout/issues/760) 
@@ -41,11 +43,11 @@ RUN git config --global --add safe.directory /worker/all/build/packages/linux/zf
 RUN git config --global --add safe.directory /worker/all/build/packages/linux-zen/zfs-linux-zen-git/zfs
 RUN git config --global --add safe.directory /worker/all/build/packages/_utils/zfs-utils-git/zfs
 
-# setup systemd to only start the buildbot worker
+# add nspawn wrapper to keep existing unit
 USER root
-ADD buildbot-worker.service /etc/systemd/system/
-ADD worker.target /etc/systemd/system/
-RUN systemctl set-default worker.target
+COPY systemd-nspawn-wrapper /usr/local/bin/systemd-nspawn
+RUN systemd-machine-id-setup
 
 ADD start.sh /
-CMD ["sh", "/start.sh"]
+CMD ["su", "-c", "sh /start.sh", "buildbot"]
+
