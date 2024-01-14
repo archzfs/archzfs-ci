@@ -70,4 +70,4 @@ expect -c "spawn gpg --edit-key \$key trust quit; send \"5\ry\r\"; expect eof"
 EOF
 
 # start this worker
-exec /start.sh
+exec su -c "sh /start.sh" buildbot
