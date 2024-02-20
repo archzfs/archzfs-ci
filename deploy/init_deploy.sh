@@ -69,5 +69,5 @@ EOD
 expect -c "spawn gpg --edit-key \$key trust quit; send \"5\ry\r\"; expect eof"
 EOF
 
-# start this worker
-exec su -c "sh /start.sh" buildbot
+# start this worker with clean environment variables
+exec /bin/env -i WORKER_NAME=${WORKER_NAME} PATH={$PATH} su -c "sh /start.sh" buildbot
