@@ -1,7 +1,7 @@
 FROM archlinux:base-devel
 STOPSIGNAL SIGRTMIN+3
 
-RUN pacman -Syu --noconfirm --needed python-pipx python-twisted python-future git wget systemd-sysvcompat openresolv vi
+RUN pacman -Syu --noconfirm --needed python-pipx python-twisted python-future git wget systemd-sysvcompat openresolv vi btrfs-progs
 
 # add buildbot user and give passwordless sudo access (needed for archzfs build scripts)
 RUN groupadd -r buildbot && \
